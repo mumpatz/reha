@@ -1,0 +1,16 @@
+{
+  "name": "Knie Rehab",
+  "short_name": "KnieRehab",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1A1A1A",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23F58D2D'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='%231A1A1A' font-family='sans-serif' font-weight='bold'>KR</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
+
