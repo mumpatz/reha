@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.json">
+<title>Knie Rehab</title>
+<style>
+  @font-face {
+    font-family: 'ImageFuture';
+    src: url('ImageFuture-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --purple: #C8A2E8;
+    --green: #A8E6A3;
+    --yellow: #F5E190;
+    --orange: #F58D2D;
+    --blue: #93C5FD;
+    --pink: #F9A8D4;
+    --text: #1A1A1A;
+    --text2: #888;
+    --bg: #fff;
+    --r: 24px;
+    --gap: 8px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top) 0 calc(80px + env(safe-area-inset-bottom)) 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hl {
+    font-family: 'ImageFuture', 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  /* Hero */
+  .hero { margin-bottom: 28px; }
+  .hero h1 {
+    font-size: clamp(52px, 13vw, 76px);
+    line-height: 0.92;
+    margin-bottom: 14px;
+  }
+  .hero-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--yellow);
+    color: var(--text);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .badge svg { width: 13px; height: 13px; }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    gap: var(--gap);
+    margin-bottom: 20px;
+  }
+  .nav button {
+    flex: 1;
+    padding: 14px 8px;
+    border-radius: var(--r);
+    border: none;
+    font-family: 'ImageFuture', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text);
+    transition: transform 0.12s;
+  }
+  .nav button:active { transform: scale(0.97); }
+  .nav .on { background: var(--text); color: #fff; }
+  .nav .off { background: #F0F0F0; }
+
+  /* Info Block */
+  .info {
+    background: var(--blue);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .info b { display: block; margin-bottom: 3px; font-size: 14px; }
+
+  /* Phase */
+  .phase { margin-bottom: var(--gap); }
+  .phase-head {
+    border-radius: var(--r);
+    padding: 18px 22px;
+    margin-bottom: var(--gap);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .phase-head h2 {
+    font-size: clamp(26px, 7vw, 34px);
+    line-height: 1;
+  }
+  .phase-head span {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.5;
+  }
+
+  /* Card */
+  .card {
+    background: #F5F5F5;
+    border-radius: var(--r);
+    margin-bottom: var(--gap);
+    overflow: hidden;
+  }
+  .card.done { opacity: 0.35; }
+  .card.done .cname { text-decoration: line-through; }
+
+  .ctop {
+    display: flex;
+    align-items: center;
+    padding: 16px 18px;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .chk {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: #E0E0E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .chk svg { opacity: 0; }
+  .chk.on { background: var(--text); }
+  .chk.on svg { opacity: 1; }
+
+  .cname { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .csub { font-size: 12px; color: var(--text2); margin-top: 1px; font-weight: 500; }
+
+  .cchev {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: #CCC;
+    transition: transform 0.2s;
+  }
+  .cchev.open { transform: rotate(180deg); }
+
+  /* Detail */
+  .cdet { display: none; padding: 0 18px 18px; }
+  .cdet.open { display: block; }
+
+  .cbox {
+    background: #EBEBEB;
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #555;
+    margin-bottom: 12px;
+  }
+  .cbox strong { color: var(--text); }
+
+  .csteps {
+    font-size: 13px;
+    line-height: 1.6;
+    padding-left: 18px;
+    margin-bottom: 14px;
+    color: #555;
+  }
+  .csteps li { margin-bottom: 3px; }
+  .csteps li::marker { color: #CCC; }
+
+  /* Timer */
+  .tmr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    background: #EBEBEB;
+    border-radius: 16px;
+    padding: 10px 14px;
+  }
+  .tmr-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tmr-btn:active { transform: scale(0.95); }
+  .tmr-btn.run { background: #DC2626; }
+  .tmr-btn svg { width: 11px; height: 11px; }
+  .tmr-time {
+    font-family: 'ImageFuture', sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .tmr-tot { font-size: 12px; color: var(--text2); margin-left: auto; }
+
+  /* Video */
+  .vid {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #E0E0E0;
+  }
+  .vid iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+
+  /* Bottom bar */
+  .bottombar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+  .binner {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btrack {
+    flex: 1;
+    height: 6px;
+    background: #EAEAEA;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bfill {
+    height: 100%;
+    background: var(--text);
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .blabel {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: right;
+  }
+
+  /* Reset */
+  .rst {
+    display: block;
+    width: 100%;
+    margin: 12px 0;
+    padding: 14px;
+    background: #F0F0F0;
+    border: none;
+    border-radius: var(--r);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .rst svg { width: 14px; height: 14px; }
+
+  .disc {
+    font-size: 11px;
+    color: #CCC;
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="app"></div>
+
+<div class="bottombar">
+  <div class="binner">
+    <div class="btrack"><div class="bfill" id="bf" style="width:0%"></div></div>
+    <div class="blabel" id="bl">0/0</div>
+  </div>
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+const I = {
+  chk: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  chv: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  fire: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 23c-4.97 0-9-3.58-9-8 0-3.07 2.31-6.64 4-8.5.82-.9 1.97-.59 2.29.47.4 1.33 1.12 2.53 2.21 3.53.3-2.2 1.13-4.4 2.86-6.5.64-.78 1.78-.55 2.14.36C18.31 8.86 21 12.33 21 15c0 4.42-4.03 8-9 8z"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>',
+  stop: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>',
+  rst: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>'
+};
+
+const CM = {orange:'#F58D2D',green:'#A8E6A3',purple:'#C8A2E8',yellow:'#F5E190',blue:'#93C5FD',pink:'#F9A8D4'};
+
+const P = {
+  daily: {
+    label: "Alltag",
+    phases: [
+      { name: "Soft Tissue", time: "~5 Min", color: "orange", exercises: [
+        { name: "Foam Rolling Quads", meta: "2 Min pro Seite",
+          why: "<strong>Warum:</strong> Lockert den Vastus medialis und verbessert die Durchblutung um die Patella. Bei Grad-4-Knorpelschaden ist gute Knorpelernahrung entscheidend.",
+          steps: ["Foam Roller unter den vorderen Oberschenkel","Langsam von Hufte bis oberhalb des Knies rollen","Fokus Innenseite (VMO)","Bei Triggerpunkten 20-30s verweilen","Nicht direkt auf der Kniescheibe"],
+          vid: "4SGMbKMKgRk", timer: 120 },
+        { name: "Narbengewebe-Massage", meta: "2 Min, oberhalb inneres Knie",
+          why: "<strong>Warum:</strong> Vernarbtes Gewebe von der alten Langhantel-Verletzung braucht Cross-Friction-Massage um Adhasionen aufzubrechen.",
+          steps: ["Sitz bequem, Knie leicht gebeugt","Verhartetes Gewebe oberhalb inneres Knie finden","Daumen quer zur Faserrichtung massieren","Mittlerer Druck","30s Cross-Friction, 10s kreisend"],
+          vid: "V4xOrzHGJ4s", timer: 120 },
+        { name: "Waden + Hamstring Stretch", meta: "2x30s pro Seite",
+          why: "<strong>Warum:</strong> Baker-Zyste = Flussigkeit in der Kniekehle. Lockere Waden/Hamstrings reduzieren den Druck und verbessern die Streckung.",
+          steps: ["Wade: Ausfallschritt an Wand, Ferse am Boden, 30s","Seite wechseln","Hamstring: Bein gestreckt auf Stuhl, vorwarts lehnen, 30s"],
+          vid: "gJio0lPysF8", timer: 30 }
+      ]},
+      { name: "Kraftigung", time: "~10 Min", color: "green", exercises: [
+        { name: "Quad Sets", meta: "3x10, je 10s halten",
+          why: "<strong>Warum:</strong> Basisubung bei Grad-4-Knorpelschaden. Aktiviert Quadrizeps ohne Gelenkbewegung, minimiert Belastung auf den retropatellaren Knorpel.",
+          steps: ["Ruckenlage, Bein gestreckt","Handtuchrolle unter Kniekehle","Quad anspannen, Kniescheibe zieht Richtung Hufte","10s halten, losen","10 Wdh, 3 Satze"],
+          vid: "9EhHFemc8WQ", timer: 10 },
+        { name: "Straight Leg Raise", meta: "3x10, 3s oben",
+          why: "<strong>Warum:</strong> Starkt VMO durch Fus-Ausenrotation. Besseres Patella-Tracking korrigiert Fehlbelastung an der medialen Facette.",
+          steps: ["Ruckenlage, gesundes Bein angewinkelt","Betroffenes Bein strecken, Fus leicht nach ausen","Quad anspannen, Bein 30cm heben","3s oben, ablegen","10x, 3 Satze"],
+          vid: "zo2pqw794B0", timer: 0 },
+        { name: "TKE mit Band", meta: "3x15",
+          why: "<strong>Warum:</strong> Isoliert die letzten 20-30 Grad der Kniestreckung, wo der VMO am starksten arbeitet.",
+          steps: ["Band auf Kniehohe an Rack","Band hinter betroffenes Knie","Zurucktreten fur Spannung","Knie gegen Band vollstandig strecken","15 Wdh, 3 Satze"],
+          vid: "W7n9dUiEbLM", timer: 0 },
+        { name: "Spanish Squat", meta: "3x30s",
+          why: "<strong>Warum:</strong> Belastet Quad stark ohne patellofemorale Kompression. Band zieht Tibia zuruck und entlastet die Patella.",
+          steps: ["Band auf Kniehohe, hinter beide Knie","Fuse huftbreit, Gewicht auf Fersen","Hufte nach hinten-unten, ca. 60-70 Grad","30s halten, 3 Satze","Nur so tief wie schmerzfrei"],
+          vid: "mik90mAS6fU", timer: 30 }
+      ]},
+      { name: "Cooldown", time: "~3 Min", color: "purple", exercises: [
+        { name: "Knie-Pendel", meta: "2x20",
+          why: "<strong>Warum:</strong> Sanfte Bewegung fordert synoviale Flussigkeitsproduktion und nahrt den Knorpel. Hilft gegen Baker-Zyste.",
+          steps: ["Am Tischrand sitzen, Beine frei","Knie sanft vor und zuruck pendeln","Komplett entspannt, 20x, Pause, 20x"],
+          vid: "ubCsg3Msvpg", timer: 0 },
+        { name: "Quad Stretch", meta: "2x30s",
+          why: "<strong>Warum:</strong> Dehnt Quadrizeps, verbessert Kniebeugung und reduziert den Zug auf die Patella.",
+          steps: ["Bauchlage","Ferse zum Gesas ziehen","Sanft dehnen, 30s","Nur so weit wie schmerzfrei"],
+          vid: "YoVQ3Wjz7os", timer: 30 }
+      ]}
+    ]
+  },
+  training: {
+    label: "Training",
+    phases: [
+      { name: "Pre-Workout", time: "~5 Min", color: "yellow", exercises: [
+        { name: "Foam Rolling Quads", meta: "90s pro Seite",
+          why: "<strong>Warum:</strong> Quads vor Box Squats und RDLs aufwarmen und Adhasionen losen.",
+          steps: ["Foam Roller unter Oberschenkel","Fokus VMO (innen)","90s pro Seite"],
+          vid: "4SGMbKMKgRk", timer: 90 },
+        { name: "Narbengewebe kurz", meta: "60s",
+          why: "<strong>Warum:</strong> Schnelle Mobilisation vor Belastung.",
+          steps: ["Cross-Friction oberhalb inneres Knie","60s, mittlerer Druck"],
+          vid: "V4xOrzHGJ4s", timer: 60 },
+        { name: "TKE Aktivierung", meta: "2x10, leichtes Band",
+          why: "<strong>Warum:</strong> VMO-Aktivierung vor schwerem Training. Verbessert Patella-Tracking wahrend Box Squats.",
+          steps: ["Leichtes Band, 2x10","Saubere volle Kniestreckung","Nur Aktivierung"],
+          vid: "W7n9dUiEbLM", timer: 0 }
+      ]},
+      { name: "Post-Workout", time: "~5 Min", color: "pink", exercises: [
+        { name: "Knie-Pendel", meta: "2x30",
+          why: "<strong>Warum:</strong> Synovialflussigkeit verteilen nach Belastung. Reduziert Schwellung.",
+          steps: ["Tischrand sitzen","Bein pendeln lassen, 30x","Entspannt"],
+          vid: "ubCsg3Msvpg", timer: 0 },
+        { name: "Waden + Hamstring", meta: "2x30s pro Seite",
+          why: "<strong>Warum:</strong> Baker-Zyste-Management nach Belastung.",
+          steps: ["Wade: Ausfallschritt, 30s/Seite","Hamstring: Bein auf Stuhl, 30s"],
+          vid: "gJio0lPysF8", timer: 30 },
+        { name: "Quad Stretch", meta: "2x30s",
+          why: "<strong>Warum:</strong> Quad nach Box Squats dehnen. Reduziert patellaren Zug.",
+          steps: ["Bauchlage, Ferse zum Gesas","30s halten"],
+          vid: "YoVQ3Wjz7os", timer: 30 }
+      ]}
+    ]
+  }
+};
+
+let S = { p:'daily', d:{}, o:{}, t:{}, streak:0, last:null };
+try { const x=localStorage.getItem('kr3'); if(x) S={...S,...JSON.parse(x)}; } catch(e){}
+function save(){ try{localStorage.setItem('kr3',JSON.stringify({...S,t:{}}));}catch(e){} }
+
+function id(a,b){ return S.p+'-'+a+'-'+b; }
+function tot(){ let n=0; P[S.p].phases.forEach(p=>n+=p.exercises.length); return n; }
+function dn(){ let n=0; P[S.p].phases.forEach((p,i)=>p.exercises.forEach((_,j)=>{if(S.d[id(i,j)])n++;})); return n; }
+
+function tog(a,b){ S.d[id(a,b)]=!S.d[id(a,b)]; if(dn()===tot()){S.last=new Date().toDateString();} save();render(); }
+function exp(a,b){ S.o[id(a,b)]=!S.o[id(a,b)]; render(); }
+function sp(k){ S.p=k; render(); }
+function res(){ P[S.p].phases.forEach((p,i)=>p.exercises.forEach((_,j)=>{delete S.d[id(i,j)];}));
+  Object.keys(S.t).forEach(k=>{if(S.t[k].iv)clearInterval(S.t[k].iv);delete S.t[k];}); save();render(); }
+function fmt(s){ return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0'); }
+
+function tmr(k,s){
+  if(S.t[k]&&S.t[k].iv){clearInterval(S.t[k].iv);delete S.t[k];render();return;}
+  S.t[k]={rem:s,iv:setInterval(()=>{
+    S.t[k].rem--;
+    if(S.t[k].rem<=0){
+      clearInterval(S.t[k].iv);
+      try{const c=new(window.AudioContext||window.webkitAudioContext)();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=800;g.gain.value=0.3;o.start();setTimeout(()=>{o.stop();c.close();},300);}catch(e){}
+      delete S.t[k];render();return;
+    }
+    const el=document.getElementById('t-'+k);if(el)el.textContent=fmt(S.t[k].rem);
+  },1000)};
+  render();
+}
+
+function render(){
+  const app=document.getElementById('app');
+  const prog=P[S.p], d=dn(), t=tot(), pct=t?Math.round(d/t*100):0;
+  document.getElementById('bf').style.width=pct+'%';
+  document.getElementById('bl').textContent=d+'/'+t;
+
+  let h='<div class="hero"><h1 class="hl">Knie<br>Rehab</h1><div class="hero-row">';
+  h+='<div class="badge">'+I.fire+' '+S.streak+' Tage</div>';
+  h+='<span>15-20 Min</span></div></div>';
+
+  h+='<div class="nav">';
+  Object.entries(P).forEach(([k,v])=>{
+    h+='<button class="'+(S.p===k?'on':'off')+' hl" onclick="sp(\''+k+'\')">'+v.label+'</button>';
+  });
+  h+='</div>';
+
+  h+='<div class="info"><b>MRT 18.02.2026</b>Grad-4-Knorpeldefekte retropatellar (med. Facette) + zentrale Trochlea femoris. Subchondrales Knochenmarksodem. Baker-Zyste. Vernarbtes Gewebe oberhalb inneres Knie.</div>';
+
+  prog.phases.forEach((ph,pi)=>{
+    h+='<div class="phase"><div class="phase-head" style="background:'+CM[ph.color]+'">';
+    h+='<h2 class="hl">'+ph.name+'</h2><span>'+ph.time+'</span></div>';
+    ph.exercises.forEach((ex,ei)=>{
+      const k=id(pi,ei), done=!!S.d[k], open=!!S.o[k];
+      const ta=S.t[k]&&S.t[k].iv, tr=S.t[k]?S.t[k].rem:ex.timer;
+      h+='<div class="card'+(done?' done':'')+'">';
+      h+='<div class="ctop" onclick="exp('+pi+','+ei+')">';
+      h+='<div class="chk'+(done?' on':'')+'" onclick="event.stopPropagation();tog('+pi+','+ei+')">'+I.chk+'</div>';
+      h+='<div><div class="cname">'+ex.name+'</div><div class="csub">'+ex.meta+'</div></div>';
+      h+='<div class="cchev'+(open?' open':'')+'">'+I.chv+'</div></div>';
+      h+='<div class="cdet'+(open?' open':'')+'">';
+      h+='<div class="cbox">'+ex.why+'</div>';
+      h+='<ol class="csteps">';ex.steps.forEach(s=>h+='<li>'+s+'</li>');h+='</ol>';
+      if(ex.timer>0){
+        h+='<div class="tmr"><button class="tmr-btn'+(ta?' run':'')+'" onclick="tmr(\''+k+'\','+ex.timer+')">'+(ta?I.stop+' Stop':I.play+' Start')+'</button>';
+        h+='<div class="tmr-time" id="t-'+k+'">'+fmt(tr||ex.timer)+'</div>';
+        h+='<div class="tmr-tot">'+fmt(ex.timer)+'</div></div>';
+      }
+      h+='<div class="vid"><iframe src="https://www.youtube.com/embed/'+ex.vid+'" allowfullscreen loading="lazy"></iframe></div>';
+      h+='</div></div>';
+    });
+    h+='</div>';
+  });
+
+  h+='<button class="rst" onclick="res()">'+I.rst+' Tag zurucksetzen</button>';
+  h+='<p class="disc">Kein Ersatz fur arztliche Beratung. Ubungen schmerzfrei ausfuhren.</p>';
+  app.innerHTML=h;
+}
+render();
+</script>
+</body>
+</html>
